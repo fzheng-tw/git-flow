@@ -1,24 +1,43 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Gitgraph } from '@gitgraph/react';
+
+
+import MyComponent from "./gitflow/android"
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+        <p style={{fontSize  : "50px"}}>
+          Branch and package flow
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <div style={{display: "inline-block", width: "50%"}}>
+        <Gitgraph>
+            {(gitgraph) => {
+            // Simulate git commands with Gitgraph API.
+            const master = gitgraph.branch("master");
+            master.commit("Initial commit");
+
+            const develop = gitgraph.branch("develop");
+            develop.commit("Add TypeScript");
+
+            const aFeature = gitgraph.branch("a-feature");
+            aFeature
+              .commit("Make it work")
+              .commit("Make it right")
+              .commit("Make it fast");
+
+            develop.merge(aFeature);
+            develop.commit("Prepare v1");
+
+            master.merge(develop).tag("v1.0.0");
+          }}
+        </Gitgraph>
+      </div>
+
     </div>
   );
 }
