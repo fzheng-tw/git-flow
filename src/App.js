@@ -191,6 +191,44 @@ function App() {
           }}
         </Gitgraph>
       </div>
+
+
+      <div>
+        <p style={{fontSize  : "50px"}}>
+          Shell Branch and Git flow
+        </p>
+        <Gitgraph options={options}>
+            {(gitgraph) => {
+
+            const master = gitgraph.branch({
+              name: "master",
+              style: {
+                color: colors.green,
+                label: labelStyleUtil(colors.green)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.green),
+            });
+            master.commit("to build package to RELEASE after all tests pass");
+            master.tag("v7.6.0");
+
+            const release = gitgraph.branch({
+              name: "release",
+              style: {
+                color: colors.blue,
+                label: labelStyleUtil(colors.blue)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
+            });
+            release.commit("to build package to UAT");
+            release.commit("Change Module A from A-0.0.0 -> A-1.0.0-snapshot");
+            release.commit("Trigger the pipelines manually to build a package to uat");
+            release.commit("Trigger the pipelines manually to build a package to uat after A change again");
+            release.commit("Change Module A from A-1.0.0-snapshot -> A-1.0.0, ready to release");
+            master.merge(release).tag("v7.7.0");
+
+          }}
+        </Gitgraph>
+      </div>
       <footer style={{height:"100px"}}>
       </footer>
 
