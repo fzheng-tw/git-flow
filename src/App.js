@@ -179,14 +179,12 @@ function App() {
               .commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
 
             master.merge(hotfix);
-            master.tag("v1.0.1")
+            master.tag("v1.0.1");
+
+            snapshot.merge(hotfix);
 
             release.merge(snapshot).commit("change gradle version: 1.2.0-snapshot -> 1.2.0");;
             master.merge(release).tag("v1.2.0");
-
-
-
-
 
           }}
         </Gitgraph>
