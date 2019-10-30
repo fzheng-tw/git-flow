@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Gitgraph, Orientation,} from '@gitgraph/react';
+import { Gitgraph, Orientation,templateExtend, TemplateName} from '@gitgraph/react';
 
 
 
@@ -41,13 +41,24 @@ function App() {
     };
   };
 
+  const withoutAuthor = templateExtend(TemplateName.Metro, {
+     commit: {
+       message: {
+         displayAuthor: false,
+       },
+     },
+   });
+  const options = {
+    template: withoutAuthor
+  };
+
   return (
     <div className="App">
       <div style={{display: "inline-block", width: "50%"}}>
         <p style={{fontSize  : "50px"}}>
           Branch and package flow
         </p>
-        <Gitgraph>
+        <Gitgraph options={options}>
             {(gitgraph) => {
 
             const master = gitgraph.branch({
