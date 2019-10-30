@@ -45,6 +45,7 @@ function App() {
      commit: {
        message: {
          displayAuthor: false,
+         displayHash: false,
        },
      },
    });
@@ -54,9 +55,9 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{display: "inline-block", width: "50%"}}>
+      <div>
         <p style={{fontSize  : "50px"}}>
-          Branch and package flow
+          Module Branch and Git flow
         </p>
         <Gitgraph options={options}>
             {(gitgraph) => {
@@ -81,7 +82,7 @@ function App() {
               },
               commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
             });
-            release.commit("package and publish after all tests pass");
+            release.commit("to build package and RELEASE after all tests pass");
 
             const snapshot = gitgraph.branch({
               name: "snapshot",
@@ -92,7 +93,7 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.amber),
             });
 
-            snapshot.commit("create snapshot package");
+            snapshot.commit("to build snapshot package for test");
 
             const snapshot_develop = gitgraph.branch({
               name: "snapshot/7.7.0",
