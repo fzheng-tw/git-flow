@@ -219,12 +219,36 @@ function App() {
             });
             release.commit("to build package to UAT");
             release.commit("Change Module A from A-0.0.0 -> A-1.0.0-snapshot");
-            release.commit("Trigger the pipelines manually to build a package to uat");
-            release.commit("Trigger the pipelines manually to build a package to uat after A change again");
+            release.commit("Trigger the pipelines manually to build a package RELEASE-7.7.0-Staging to uat");
+            release.commit("Trigger the pipelines manually to build a package RELEASE-7.7.0-Staging to uat after A change again");
             release.commit("Change Module A from A-1.0.0-snapshot -> A-1.0.0, ready to release");
             master.merge(release).tag("v7.7.0");
 
+            release.commit("Change Module A from A-1.0.0 -> A-1.1.0-snapshot");
+            release.commit("Build a package RELEASE-7.8.0-Staging to uat when A finish");
+
+            const hotfix = gitgraph.branch({
+              name: "hotfix",
+              from: master,
+              style: {
+                color: colors.pink,
+                label: labelStyleUtil(colors.pink)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.pink),
+            });
+
+            hotfix.commit("Change Module A from A-1.0.0 -> A-1.0.1-snapshot");
+            hotfix.commit("Trigger the pipelines manually to build a package RELEASE-7.7.1-Staging to uat");
+            hotfix.commit("Change Module A from A-1.0.1-snapshot -> A-1.0.1, ready to release");
+            master.merge(hotfix).tag("v7.7.1");
+            release.merge(hotfix);
+
+            release.commit("Build a package RELEASE-7.8.0-Staging to uat when A change again");
+            release.commit("Change Module A from A-1.0.0-snapshot -> A-1.0.0, ready to release");
+            master.merge(release).tag("v7.8.0");
+
           }}
+
         </Gitgraph>
       </div>
       <footer style={{height:"100px"}}>
