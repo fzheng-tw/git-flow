@@ -72,20 +72,10 @@ function App() {
             });
             master.commit("Initial commit");
 
-            master.tag("v1.0.0")
+            master.tag("v1.0.0");
 
-            const release = gitgraph.branch({
-              name: "release",
-              style: {
-                color: colors.blue,
-                label: labelStyleUtil(colors.blue)
-              },
-              commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
-            });
-            release.commit("to build package and RELEASE after all tests pass");
-
-            const snapshot = gitgraph.branch({
-              name: "snapshot",
+            const release770 = gitgraph.branch({
+              name: "release770",
               style: {
                 color: colors.amber,
                 label: labelStyleUtil(colors.amber)
@@ -93,10 +83,38 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.amber),
             });
 
-            snapshot.commit("to build snapshot package for test");
+            release770.commit("change gradle version: 1.0.0 -> 1.1.0-snapshot");
 
-            const snapshot_develop = gitgraph.branch({
-              name: "snapshot/7.7.0",
+            const release790 = gitgraph.branch({
+              name: "release790",
+              from: master,
+              style: {
+                color: colors.brown,
+                label: labelStyleUtil(colors.brown)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.brown),
+            });
+
+            release790.commit("change gradle version: 1.0.0 -> 1.2.0-snapshot");
+
+            const dev_feature_E = gitgraph.branch({
+              name: "dev/JIRA-888",
+              from: release790,
+              style: {
+                color: colors.gray,
+                label: labelStyleUtil(colors.gray)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.gray),
+            });
+
+            dev_feature_E.commit('spike something');
+            dev_feature_E.commit('spike one more thing');
+            release790.merge(dev_feature_E);
+
+
+            const dev_feature_A = gitgraph.branch({
+              name: "dev/JIRA-311",
+              from: release770,
               style: {
                 color: colors.deepOrange,
                 label: labelStyleUtil(colors.deepOrange)
@@ -104,44 +122,83 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.deepOrange),
             });
 
-            snapshot_develop
-              .commit("develop this module for app release 7.7.0")
-              .commit("change gradle version: 1.0.0 -> 1.1.0-snapshot");;
+            const dev_feature_B = gitgraph.branch({
+              name: "dev/JIRA-332",
+              from: release770,
+              style: {
+                color: colors.orange,
+                label: labelStyleUtil(colors.orange)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.orange),
+            });
 
-            snapshot_develop
+            dev_feature_A
+              .commit("develop this module for app release 7.7.0");
+
+            dev_feature_A
               .commit("Make it work");
+            dev_feature_B.commit("Small change");
+            release770.merge(dev_feature_A);
+            release770.merge(dev_feature_B);
 
-            snapshot.merge(snapshot_develop);
-
-            snapshot_develop
+            dev_feature_A
               .commit("Make it right")
               .commit("Make it fast");
-            snapshot.merge(snapshot_develop);
+            release770.merge(dev_feature_A);
 
-            release
-              .merge(snapshot)
+            master
+              .merge(release770)
               .commit("change gradle version: 1.1.0-snapshot -> 1.1.0");
 
-            master.merge(release).tag("v1.1.0");
+            master.tag("v1.1.0");
 
-            release.merge(master);
-            snapshot.merge(release);
-
-            const snapshot_develop_for_7_8_0 = gitgraph.branch({
-              name: "snapshot/7.8.0",
-              from: snapshot,
+            const release780 = gitgraph.branch({
+              name: "release/7.8.0",
+              from: master,
               style: {
-                color: colors.brown,
-                label: labelStyleUtil(colors.brown)
+                color: colors.blue,
+                label: labelStyleUtil(colors.blue)
               },
-              commitDefaultOptions: commitDefaultOptionsUtil(colors.brown),
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
             });
-            snapshot_develop_for_7_8_0
-              .commit("develop this module for app release 7.8.0")
-              .commit("change gradle version: 1.1.0 -> 1.2.0-snapshot")
-              .commit("make it work");
 
-            snapshot.merge(snapshot_develop_for_7_8_0);
+            release780.commit("make it correct");
+            const dev_feature_C = gitgraph.branch({
+              name: "dev/JIRA-367",
+              style: {
+                color: colors.deepOrange,
+                label: labelStyleUtil(colors.deepOrange)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.deepOrange),
+            });
+
+            const dev_feature_D = gitgraph.branch({
+              name: "dev/JIRA-374",
+              style: {
+                color: colors.orange,
+                label: labelStyleUtil(colors.orange)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.orange),
+            });
+
+            const dev_feature_F = gitgraph.branch({
+              name: "dev/JIRA-999",
+              from: release790,
+              style: {
+                color: colors.gray,
+                label: labelStyleUtil(colors.gray)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.gray),
+            });
+            dev_feature_F.commit("big thing");
+            release790.merge(dev_feature_F);
+
+
+            dev_feature_C.commit("change gradle version: 1.1.0 -> 1.2.0-snapshot");
+            dev_feature_D.commit("make it correct");
+
+            release780.merge(dev_feature_C);
+            release780.merge(dev_feature_D);
 
             const hotfix = gitgraph.branch({
               name: "hotfix",
@@ -175,16 +232,18 @@ function App() {
               .commit("fix it thoughtfully");
 
             hotfix
-              .merge(hotfix_7_7_1)
-              .commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
+              .merge(hotfix_7_7_1);
+
 
             master.merge(hotfix);
+            master.commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
+            release780.merge(hotfix);
+            release790.merge(hotfix);
             master.tag("v1.0.1");
 
-            snapshot.merge(hotfix);
-
-            release.merge(snapshot).commit("change gradle version: 1.2.0-snapshot -> 1.2.0");;
-            master.merge(release).tag("v1.2.0");
+            master.merge(release780)
+            master.commit("change gradle version: 1.2.0-snapshot -> 1.2.0");
+            master.tag("v1.2.0");
 
           }}
         </Gitgraph>
