@@ -145,12 +145,8 @@ function App() {
               .commit("Make it right")
               .commit("Make it fast");
             release770.merge(dev_feature_A);
-
-            master
-              .merge(release770)
-              .commit("change gradle version: 1.1.0-snapshot -> 1.1.0");
-
-            master.tag("v1.1.0");
+            release770.commit("change gradle version: 1.1.0-snapshot -> 1.1.0")
+            master.merge(release770).tag("v1.1.0")
 
             const release780 = gitgraph.branch({
               name: "release/7.8.0",
@@ -233,17 +229,21 @@ function App() {
 
             hotfix
               .merge(hotfix_7_7_1);
+            hotfix.commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
 
 
             master.merge(hotfix);
-            master.commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
-            release780.merge(hotfix);
-            release790.merge(hotfix);
             master.tag("v1.0.1");
 
+            release780.merge(master);
+            release790.merge(master);
+            release780.commit("change gradle version: 1.2.0-snapshot -> 1.2.0");
+
             master.merge(release780)
-            master.commit("change gradle version: 1.2.0-snapshot -> 1.2.0");
             master.tag("v1.2.0");
+
+            master.merge(release790)
+            master.tag("v1.3.0");
 
           }}
         </Gitgraph>
@@ -268,23 +268,43 @@ function App() {
             master.commit("to build package to RELEASE after all tests pass");
             master.tag("v7.6.0");
 
-            const release = gitgraph.branch({
-              name: "release",
+
+            const release770 = gitgraph.branch({
+              name: "release770",
+              style: {
+                color: colors.amber,
+                label: labelStyleUtil(colors.amber)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.amber),
+            });
+
+            const release790 = gitgraph.branch({
+              name: "release790",
+              from: master,
+              style: {
+                color: colors.brown,
+                label: labelStyleUtil(colors.brown)
+              },
+              commitDefaultOptions: commitDefaultOptionsUtil(colors.brown),
+            });
+            release790.commit("Change Module A from A-1.0.0 -> A-1.3.0-snapshot, to test");
+
+            release770.commit("Change Module A from A-1.0.0 -> A-1.1.0-snapshot, to test");
+            release770.commit("Change Module A from A-1.1.0-snapshot -> A-1.1.0, ready to release");
+            master.merge(release770).tag("v7.7.0");
+
+            const release780 = gitgraph.branch({
+              name: "release780",
+              from: master,
               style: {
                 color: colors.blue,
                 label: labelStyleUtil(colors.blue)
               },
               commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
             });
-            release.commit("to build package to UAT");
-            release.commit("Change Module A from A-0.0.0 -> A-1.0.0-snapshot");
-            release.commit("Trigger the pipelines manually to build a package RELEASE-7.7.0-Staging to uat");
-            release.commit("Trigger the pipelines manually to build a package RELEASE-7.7.0-Staging to uat after A change again");
-            release.commit("Change Module A from A-1.0.0-snapshot -> A-1.0.0, ready to release");
-            master.merge(release).tag("v7.7.0");
 
-            release.commit("Change Module A from A-1.0.0 -> A-1.1.0-snapshot");
-            release.commit("Build a package RELEASE-7.8.0-Staging to uat when A finish");
+            release780.commit("Change Module A from A-1.1.0 -> A-1.2.0-snapshot, to test");
+
 
             const hotfix = gitgraph.branch({
               name: "hotfix",
@@ -296,15 +316,19 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.pink),
             });
 
-            hotfix.commit("Change Module A from A-1.0.0 -> A-1.0.1-snapshot");
-            hotfix.commit("Trigger the pipelines manually to build a package RELEASE-7.7.1-Staging to uat");
-            hotfix.commit("Change Module A from A-1.0.1-snapshot -> A-1.0.1, ready to release");
-            master.merge(hotfix).tag("v7.7.1");
-            release.merge(hotfix);
+            hotfix.commit("Change Module A from A-1.1.0 -> A-1.1.1-snapshot, to test");
+            hotfix.commit("Change Module A from A-1.1.1-snapshot -> A-1.1.1, ready to release");
 
-            release.commit("Build a package RELEASE-7.8.0-Staging to uat when A change again");
-            release.commit("Change Module A from A-1.0.0-snapshot -> A-1.0.0, ready to release");
-            master.merge(release).tag("v7.8.0");
+            release780.commit("Change Module A from A-1.2.0-snapshot -> A-1.2.0, ready to release");
+
+            master.merge(hotfix).tag("v7.7.1");
+
+            master.merge(release780).tag("v7.8.0");
+            release790.commit("Change Module A from A-1.3.0-snapshot -> A-1.3.0, ready to release");
+            master.merge(release790).tag("v7.9.0");
+
+
+
 
           }}
 
