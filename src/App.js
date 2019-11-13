@@ -83,7 +83,7 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.amber),
             });
 
-            release770.commit("change gradle version: 1.0.0 -> 1.1.0-snapshot");
+            release770.commit("change pod version: 1.0.0 -> 1.1.0-beta.0");
 
             const release790 = gitgraph.branch({
               name: "release790",
@@ -95,7 +95,7 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.brown),
             });
 
-            release790.commit("change gradle version: 1.0.0 -> 1.2.0-snapshot");
+            release790.commit("change pod version: 1.0.0 -> 1.3.0-beta.0");
 
             const dev_feature_E = gitgraph.branch({
               name: "dev/JIRA-888",
@@ -110,6 +110,7 @@ function App() {
             dev_feature_E.commit('spike something');
             dev_feature_E.commit('spike one more thing');
             release790.merge(dev_feature_E);
+            release790.commit("change pod version: 1.3.0-beta.0 -> 1.3.0-beta.1");
 
 
             const dev_feature_A = gitgraph.branch({
@@ -139,13 +140,16 @@ function App() {
               .commit("Make it work");
             dev_feature_B.commit("Small change");
             release770.merge(dev_feature_A);
+            release770.commit("change pod version: 1.1.0-beta.0 -> 1.1.0-beta.1")
             release770.merge(dev_feature_B);
+            release770.commit("change pod version: 1.1.0-beta.1 -> 1.1.0-beta.2")
 
             dev_feature_A
               .commit("Make it right")
               .commit("Make it fast");
             release770.merge(dev_feature_A);
-            release770.commit("change gradle version: 1.1.0-snapshot -> 1.1.0")
+            release770.commit("change pod version: 1.1.0-beta.2 -> 1.1.0-beta.3");
+            release770.commit("change pod version: 1.1.0-beta.3 -> 1.1.0");
             master.merge(release770).tag("v1.1.0")
 
             const release780 = gitgraph.branch({
@@ -188,9 +192,10 @@ function App() {
             });
             dev_feature_F.commit("big thing");
             release790.merge(dev_feature_F);
+            release790.commit("change pod version: 1.3.0-beta.1 -> 1.3.0-beta.2");
 
 
-            dev_feature_C.commit("change gradle version: 1.1.0 -> 1.2.0-snapshot");
+            dev_feature_C.commit("change pod version: 1.1.0 -> 1.2.0-beta.0");
             dev_feature_D.commit("make it correct");
 
             release780.merge(dev_feature_C);
@@ -206,7 +211,7 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.pink),
             });
 
-            hotfix.commit("this branch is for hotfix from master and clear from code of snapshot");
+            hotfix.commit("this branch is for hotfix from master and clear from code of beta");
 
             const hotfix_7_7_1 = gitgraph.branch({
               name: "hotfix/7.7.1",
@@ -219,7 +224,7 @@ function App() {
             });
 
             hotfix_7_7_1
-              .commit("change gradle version: 1.0.0 -> 1.0.1-snapshot")
+              .commit("change pod version: 1.0.0 -> 1.0.1-beta.0")
               .commit("fix it");
 
             hotfix.merge(hotfix_7_7_1);
@@ -229,7 +234,7 @@ function App() {
 
             hotfix
               .merge(hotfix_7_7_1);
-            hotfix.commit("change gradle version: 1.0.1-snapshot -> 1.0.1");
+            hotfix.commit("change pod version: 1.0.1-beta.0 -> 1.0.1");
 
 
             master.merge(hotfix);
@@ -237,7 +242,7 @@ function App() {
 
             release780.merge(master);
             release790.merge(master);
-            release780.commit("change gradle version: 1.2.0-snapshot -> 1.2.0");
+            release780.commit("change pod version: 1.2.0-beta.0 -> 1.2.0");
 
             master.merge(release780)
             master.tag("v1.2.0");
@@ -287,10 +292,10 @@ function App() {
               },
               commitDefaultOptions: commitDefaultOptionsUtil(colors.brown),
             });
-            release790.commit("Change Module A from A-1.0.0 -> A-1.3.0-snapshot, to test");
+            release790.commit("Change Module A from A-1.0.0 -> A-1.3.0-beta.0, to test");
 
-            release770.commit("Change Module A from A-1.0.0 -> A-1.1.0-snapshot, to test");
-            release770.commit("Change Module A from A-1.1.0-snapshot -> A-1.1.0, ready to release");
+            release770.commit("Change Module A from A-1.0.0 -> A-1.1.0-beta.0, to test");
+            release770.commit("Change Module A from A-1.1.0-beta.0 -> A-1.1.0, ready to release");
             master.merge(release770).tag("v7.7.0");
 
             const release780 = gitgraph.branch({
@@ -303,7 +308,7 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.blue),
             });
 
-            release780.commit("Change Module A from A-1.1.0 -> A-1.2.0-snapshot, to test");
+            release780.commit("Change Module A from A-1.1.0 -> A-1.2.0-beta.0, to test");
 
 
             const hotfix = gitgraph.branch({
@@ -316,18 +321,16 @@ function App() {
               commitDefaultOptions: commitDefaultOptionsUtil(colors.pink),
             });
 
-            hotfix.commit("Change Module A from A-1.1.0 -> A-1.1.1-snapshot, to test");
-            hotfix.commit("Change Module A from A-1.1.1-snapshot -> A-1.1.1, ready to release");
+            hotfix.commit("Change Module A from A-1.1.0 -> A-1.1.1-beta.0, to test");
+            hotfix.commit("Change Module A from A-1.1.1-beta.0 -> A-1.1.1, ready to release");
 
-            release780.commit("Change Module A from A-1.2.0-snapshot -> A-1.2.0, ready to release");
+            release780.commit("Change Module A from A-1.2.0-beta.0 -> A-1.2.0, ready to release");
 
             master.merge(hotfix).tag("v7.7.1");
 
             master.merge(release780).tag("v7.8.0");
-            release790.commit("Change Module A from A-1.3.0-snapshot -> A-1.3.0, ready to release");
+            release790.commit("Change Module A from A-1.3.0-beta.0 -> A-1.3.0, ready to release");
             master.merge(release790).tag("v7.9.0");
-
-
 
 
           }}
